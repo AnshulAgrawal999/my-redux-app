@@ -8,10 +8,18 @@ function App() {
     <>
       
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
+
+        <button onClick={() => setCount((count) => count + 1)}>
+          increase count
         </button>
+
+        <button onClick={() => setCount((count) => count - 1)}>
+            decrease count
+        </button>
+        
       </div>
+
       
     </>
   )
