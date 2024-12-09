@@ -1,11 +1,16 @@
 import { useState } from 'react';
+
 import { useSelector, useDispatch } from 'react-redux';
+
 import { decrement, increment, incrementByAmount, decrementByAmount } from './features/counter/counterSlice';
 
 function App() {
-  const count = useSelector(state => state.counter.value);
-  const dispatch = useDispatch();
-  const [amount, setAmount] = useState(0);
+
+  const count = useSelector( state => state.counter.value )  ;
+
+  const dispatch = useDispatch()  ;
+
+  const [amount, setAmount] = useState(0)  ;
 
   const handleAmountChange = (e) => {
     setAmount(Number(e.target.value)); // Convert input to number
@@ -36,17 +41,20 @@ function App() {
             placeholder="Enter amount"
             style={{ marginRight: '10px' }}
           />
+
           <button
             onClick={() => dispatch(incrementByAmount(amount))}
             style={{ marginRight: '5px' }}
           >
             Increment By Amount
           </button>
+
           <button
             onClick={() => dispatch(decrementByAmount(amount))}
           >
             Decrement By Amount
           </button>
+          
         </div>
       </div>
     </div>
