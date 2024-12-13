@@ -1,63 +1,24 @@
-import { useState } from 'react';
-
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
-import { decrement, increment, incrementByAmount, decrementByAmount } from './features/counter/counterSlice';
+import { increment, decrement, incrementByAmount , fetchCountFromAPI } from './redux/counterSlice';
 
 function App() {
 
-  const count = useSelector( state => state.counter.value )  ;
+    const count = useSelector((state) => state.counter.value);
+    const status = useSelector((state) => state.counter.status);
+    const dispatch = useDispatch();
 
-  const dispatch = useDispatch()  ;
-
-  const [amount, setAmount] = useState(0)  ;
-
-  const handleAmountChange = (e) => {
-    setAmount(Number(e.target.value)); // Convert input to number
-  };
-
-  return (
-    <div>
-      <div style={{ margin: 'auto', textAlign: 'center', padding: '20px' }}>
-        <button
-          style={{ marginRight: '10px' }}
-          onClick={() => dispatch(increment())}
-        >
-          Increment
-        </button>
-        <span style={{ margin: '0 10px' }}>{count}</span>
-        <button
-          style={{ marginLeft: '10px' }}
-          onClick={() => dispatch(decrement())}
-        >
-          Decrement
-        </button>
-
-        <div style={{ marginTop: '20px' }}>
-          <input
-            type="number"
-            value={amount}
-            onChange={handleAmountChange}
-            placeholder="Enter amount"
-            style={{ marginRight: '10px' }}
-          />
-
-          <button
-            onClick={() => dispatch(incrementByAmount(amount))}
-            style={{ marginRight: '5px' }}
-          >
-            Increment By Amount
+    return (
+      <div style={{ textAlign: 'center', marginTop: '50px' }}>
+          <h1>Counter: {count}</h1>
+          <p>Status: {status}</p>
+          <button onClick={() => dispatch(increment())}>Increment</button>
+          <button onClick={() => dispatch(decrement())}>Decrement</button>
+          <button onClick={() => dispatch(incrementByAmount(5))}>Increment by 5</button>
+          <button onClick={() => dispatch(fetchCountFromAPI())}>
+              Fetch Count from API
           </button>
-
-          <button
-            onClick={() => dispatch(decrementByAmount(amount))}
-          >
-            Decrement By Amount
-          </button>
-          
-        </div>
       </div>
-    </div>
   );
 }
 
