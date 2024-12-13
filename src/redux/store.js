@@ -6,7 +6,7 @@ import counterReducer from './counterSlice';
 const loggerMiddleware = (storeAPI) => (next) => (action) => {
   console.log('Dispatching:', action);
   const result = next(action);
-  console.log('Next state:', storeAPI.getState());
+  console.log('Updated state:', storeAPI.getState());
   return result;
 };
 
