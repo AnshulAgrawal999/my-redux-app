@@ -2,6 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import counterReducer from './counterSlice';
 
+import userReducer from './userSlice';
+
 
 const loggerMiddleware = (storeAPI) => (next) => (action) => {
   console.log('Dispatching:', action);
@@ -13,6 +15,7 @@ const loggerMiddleware = (storeAPI) => (next) => (action) => {
 const store = configureStore({
     reducer: {
         counter: counterReducer,
+        user : userReducer
     },
 
     middleware: (getDefaultMiddleware) =>

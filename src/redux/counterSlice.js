@@ -6,7 +6,7 @@ export const fetchCountFromAPI = createAsyncThunk(
   'counter/fetchCount',
   async () => {
       const response = await new Promise((resolve) =>
-          setTimeout(() => resolve(10), 500)
+          setTimeout(() => resolve(), 500)
       );
       return response  ; 
   }
@@ -38,7 +38,6 @@ export const counterSlice = createSlice(
             state.status = 'loading';
         })
         .addCase(fetchCountFromAPI.fulfilled, (state, action) => {
-            state.value = action.payload;
             state.status = 'succeeded';
         })
         .addCase(fetchCountFromAPI.rejected, (state) => {
