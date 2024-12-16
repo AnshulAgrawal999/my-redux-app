@@ -6,9 +6,13 @@ import userReducer from './userSlice';
 
 
 const loggerMiddleware = (storeAPI) => (next) => (action) => {
-  console.log('Dispatching:', action);
-  const result = next(action);
-  console.log('Updated state:', storeAPI.getState());
+
+  console.log('Dispatching:', action )  ;
+
+  const result = next( action )  ;
+
+  console.log('Updated state:', store.getState() )  ;
+
   return result;
 };
 
