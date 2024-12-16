@@ -10,6 +10,16 @@ import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPackage, deletePackage, setPackages } from '../redux/packagesListSlice';
 
+const data = [
+    { id: 1, packageName: 'Jee Mains Crash Course', price: 18000, createdAt: '2024-12-16T10:00:00Z' },
+    { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 40000, createdAt: '2024-12-16T12:00:00Z' },
+    { id: 3, packageName: 'Java Spring Boot', price: 30000, createdAt: '2024-12-16T15:00:00Z' },
+    { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-16T11:00:00Z' },
+    { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-16T14:00:00Z' },
+    { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-16T13:00:00Z' },
+];
+
+
 const PackagesList = () => {
     const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' });
     const [searchQuery, setSearchQuery] = useState('');
@@ -21,15 +31,7 @@ const PackagesList = () => {
     useEffect(() => {
         const fetchAndProcessPackages = async () => {
             try {
-                const data = [
-                    { id: 1, packageName: 'Jee Mains Crash Course', price: 18000, createdAt: '2024-12-16T10:00:00Z' },
-                    { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 40000, createdAt: '2024-12-16T12:00:00Z' },
-                    { id: 3, packageName: 'Java Spring Boot', price: 30000, createdAt: '2024-12-16T15:00:00Z' },
-                    { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-16T11:00:00Z' },
-                    { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-16T14:00:00Z' },
-                    { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-16T13:00:00Z' },
-                ];
-
+                
                 dispatch(setPackages(data));
 
                 let filtered = data;
@@ -48,6 +50,19 @@ const PackagesList = () => {
 
         fetchAndProcessPackages();
     }, [dispatch, searchQuery, sortConfig]);
+
+    useEffect(() => {
+        let filtered = packages;
+        if (searchQuery) {
+            filtered = filtered.filter(pkg =>
+                pkg.packageName.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+    
+        const sorted = _.orderBy(filtered, [sortConfig.field], [sortConfig.order]);
+        setSortedPackages(sorted);
+    }, [packages, searchQuery, sortConfig]);
+    
 
     const handleSortChange = (field) => {
         setSortConfig(prevConfig => ({
