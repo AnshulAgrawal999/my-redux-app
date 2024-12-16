@@ -1,11 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [
-  // Example initial state, replace or fetch dynamically
-  { id: 1, packageName: 'Basic Package', price: 50, createdAt: '2024-12-01T10:00:00Z' },
-  { id: 2, packageName: 'Standard Package', price: 100, createdAt: '2024-12-05T12:00:00Z' },
-  { id: 3, packageName: 'Premium Package', price: 200, createdAt: '2024-12-10T15:00:00Z' },
-];
+const initialState = [];
 
 const packagesSlice = createSlice({
   name: 'packages',

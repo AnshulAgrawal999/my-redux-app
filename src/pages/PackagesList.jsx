@@ -26,9 +26,12 @@ const PackagesList = () => {
 
                 const data = [
                     // Example initial state, replace or fetch dynamically
-                    { id: 1, packageName: 'Basic Package', price: 50, createdAt: '2024-12-01T10:00:00Z' },
-                    { id: 2, packageName: 'Standard Package', price: 100, createdAt: '2024-12-05T12:00:00Z' },
-                    { id: 3, packageName: 'Premium Package', price: 200, createdAt: '2024-12-10T15:00:00Z' },
+                    { id: 1, packageName: 'Jee Mains Crash Course', price: 18000, createdAt: '2024-12-01T10:00:00Z' },
+                    { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 40000, createdAt: '2024-12-05T12:00:00Z' },
+                    { id: 3, packageName: 'Java Spring Boot', price: 30000, createdAt: '2024-12-10T15:00:00Z' },
+                    { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-05T15:00:00Z' },
+                    { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-10T15:00:00Z' },
+                    { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-01T10:00:00Z' },
                   ] ;
 
 
