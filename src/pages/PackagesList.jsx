@@ -23,51 +23,27 @@ const data = [
 const PackagesList = () => {
     const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' });
     const [searchQuery, setSearchQuery] = useState('');
-    const [sortedPackages, setSortedPackages] = useState([]);
 
-    const packages = useSelector(state => state.packages);
+    const packages = useSelector(state => state.packages); // Redux state for packages
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const fetchAndProcessPackages = async () => {
-            try {
-                
-                dispatch(setPackages(data));
-
-                let filtered = data;
-                if (searchQuery) {
-                    filtered = filtered.filter(pkg =>
-                        pkg.packageName.toLowerCase().includes(searchQuery.toLowerCase())
-                    );
-                }
-
-                const sorted = _.orderBy(filtered, [sortConfig.field], [sortConfig.order]);
-                setSortedPackages(sorted);
-            } catch (error) {
-                console.error('Error fetching packages:', error);
-            }
-        };
-
-        fetchAndProcessPackages();
-    }, [dispatch, searchQuery, sortConfig]);
-
-    useEffect(() => {
+    // Filter and sort packages based on the current configuration
+    const getSortedAndFilteredPackages = () => {
         let filtered = packages;
         if (searchQuery) {
             filtered = filtered.filter(pkg =>
                 pkg.packageName.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
-    
-        const sorted = _.orderBy(filtered, [sortConfig.field], [sortConfig.order]);
-        setSortedPackages(sorted);
-    }, [packages, searchQuery, sortConfig]);
-    
+        return _.orderBy(filtered, [sortConfig.field], [sortConfig.order]);
+    };
+
+    const sortedPackages = getSortedAndFilteredPackages();
 
     const handleSortChange = (field) => {
         setSortConfig(prevConfig => ({
             field,
-            order: prevConfig.field === field && prevConfig.order === 'asc' ? 'desc' : 'asc'
+            order: prevConfig.field === field && prevConfig.order === 'asc' ? 'desc' : 'asc',
         }));
     };
 
@@ -80,9 +56,8 @@ const PackagesList = () => {
         setSearchQuery('');
     };
 
-    
     const handleDelete = (packageId) => {
-        dispatch(deletePackage(packageId));
+        dispatch(deletePackage(packageId)); // Permanently remove from Redux state
     };
 
     const handleAddPackage = () => {
@@ -127,55 +102,33 @@ const PackagesList = () => {
                 <Text color="gray.700">Sort By: <b>{sortConfig.field}</b> ({sortConfig.order})</Text>
             </Box>
 
-            <HStack px='1em' my='2rem' pos='sticky' top='90px' zIndex='9' bg='#ffffffa6'>
-                <Menu closeOnSelect={false}>
-                    <MenuButton size='xs' variant='ghost' width={'9em'}>
-                        Sort By
-                    </MenuButton>
-                    <MenuList maxWidth='240px'>
-                        <MenuOptionGroup color='gray.800' maxHeight='5vh' overflowY='auto' title='Field' type='radio'>
-                            <MenuItemOption color='gray.600' value='packageName' onClick={() => handleSortChange('packageName')}>Name</MenuItemOption>
-                            <MenuItemOption color='gray.600' value='price' onClick={() => handleSortChange('price')}>Price</MenuItemOption>
-                            <MenuItemOption color='gray.600' value='createdAt' onClick={() => handleSortChange('createdAt')}>Added Date</MenuItemOption>
-                        </MenuOptionGroup>
-                        <MenuDivider />
-                        <MenuOptionGroup color='gray.800' title='Order' type='radio'>
-                            <MenuItemOption color='gray.600' value='asc' onClick={() => setSortConfig(prev => ({ ...prev, order: 'asc' }))}>Ascending</MenuItemOption>
-                            <MenuItemOption color='gray.600' value='desc' onClick={() => setSortConfig(prev => ({ ...prev, order: 'desc' }))}>Descending</MenuItemOption>
-                        </MenuOptionGroup>
-                    </MenuList>
-                </Menu>
-            </HStack>
-
-            <Box my='10px'>
-                <Table variant='simple'>
-                    <Thead>
-                        <Tr>
-                            <Th>Name</Th>
-                            <Th>Price</Th>
-                            <Th>Added Date</Th>
-                            <Th>Actions</Th>
+            <Table variant='simple'>
+                <Thead>
+                    <Tr>
+                        <Th>Name</Th>
+                        <Th>Price</Th>
+                        <Th>Added Date</Th>
+                        <Th>Actions</Th>
+                    </Tr>
+                </Thead>
+                <Tbody>
+                    {sortedPackages.map(pkg => (
+                        <Tr key={pkg.id}>
+                            <Td>{pkg.packageName}</Td>
+                            <Td>{pkg.price}</Td>
+                            <Td>{new Date(pkg.createdAt).toLocaleString()}</Td>
+                            <Td>
+                                <Button size='sm' colorScheme='red' onClick={() => handleDelete(pkg.id)}>
+                                    <DeleteIcon />
+                                </Button>
+                            </Td>
                         </Tr>
-                    </Thead>
-                    <Tbody>
-                        {sortedPackages.map(pkg => (
-                            <Tr key={pkg.id}>
-                                <Td>{pkg.packageName}</Td>
-                                <Td>{pkg.price}</Td>
-                                <Td>{new Date(pkg.createdAt).toLocaleString()}</Td>
-                                <Td>
-                                    <Button size='sm' colorScheme='red' onClick={() => handleDelete(pkg.id)}>
-                                        <DeleteIcon />
-                                    </Button>
-                                </Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </Box>
+                    ))}
+                </Tbody>
+            </Table>
 
             <Box my='10px'>
-                <HStack flexWrap='wrap'>
+                <HStack>
                     <Button leftIcon={<AddIcon />} colorScheme="teal" size="sm" variant="outline" onClick={handleAddPackage}>
                         Add Package
                     </Button>
@@ -184,6 +137,7 @@ const PackagesList = () => {
         </Box>
     );
 };
+
 
 export default PackagesList;
 
