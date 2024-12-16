@@ -4,16 +4,16 @@ import {
     Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
     FormControl, FormLabel, Input as ChakraInput
 } from '@chakra-ui/react';
-
 import { AddIcon, DeleteIcon, SearchIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPackage, deletePackage, updatePackage, fetchPackagesFromAPI } from '../redux/packagesListSlice';
-
 import _ from 'lodash';
 
 const PackagesList = () => {
-    const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' });
-    const [searchQuery, setSearchQuery] = useState('');
+    const [filterConfig, setFilterConfig] = useState({
+        sort: { field: 'packageName', order: 'asc' },
+        searchQuery: ''
+    });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState(null);
 
@@ -22,30 +22,38 @@ const PackagesList = () => {
 
     const getSortedAndFilteredPackages = () => {
         let filtered = packages;
-        if (searchQuery) {
+        if (filterConfig.searchQuery) {
             filtered = filtered.filter(pkg =>
-                pkg.packageName.toLowerCase().includes(searchQuery.toLowerCase())
+                pkg.packageName.toLowerCase().includes(filterConfig.searchQuery.toLowerCase())
             );
         }
-        return _.orderBy(filtered, [sortConfig.field], [sortConfig.order]);
+        return _.orderBy(filtered, [filterConfig.sort.field], [filterConfig.sort.order]);
     };
 
     const sortedPackages = getSortedAndFilteredPackages();
 
     const handleSortChange = (field) => {
-        setSortConfig(prevConfig => ({
-            field,
-            order: prevConfig.field === field && prevConfig.order === 'asc' ? 'desc' : 'asc',
+        setFilterConfig(prevConfig => ({
+            ...prevConfig,
+            sort: {
+                field,
+                order: prevConfig.sort.field === field && prevConfig.sort.order === 'asc' ? 'desc' : 'asc'
+            }
         }));
     };
 
     const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
+        setFilterConfig(prevConfig => ({
+            ...prevConfig,
+            searchQuery: event.target.value
+        }));
     };
 
     const resetFiltersAndSort = () => {
-        setSortConfig({ field: 'packageName', order: 'asc' });
-        setSearchQuery('');
+        setFilterConfig({
+            sort: { field: 'packageName', order: 'asc' },
+            searchQuery: ''
+        });
     };
 
     const handleDelete = (packageId) => {
@@ -100,7 +108,7 @@ const PackagesList = () => {
                     </InputLeftElement>
                     <Input
                         placeholder="Search by package name"
-                        value={searchQuery}
+                        value={filterConfig.searchQuery}
                         onChange={handleSearchChange}
                     />
                 </InputGroup>
