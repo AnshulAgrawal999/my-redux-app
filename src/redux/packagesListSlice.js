@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Simulated API call
 export const fetchPackagesFromAPI = createAsyncThunk(
-  'packages/fetchPackages',
+  'fetchPackages',
   async () => {
       return new Promise((resolve) => {
           setTimeout(() => {
