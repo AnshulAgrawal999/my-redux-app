@@ -21,10 +21,9 @@ const PackagesList = () => {
 
 
     const [sortedPackages, setSortedPackages] = useState([]);
-    
+
 
     const packages = useSelector(state => state.packages);
-    const loading = useSelector(state => state.loading);
 
     // Filter and sort the packages when packages or searchQuery change
     useEffect(() => {
@@ -93,9 +92,7 @@ const PackagesList = () => {
             </HStack>
 
             <Box my='10px'>
-                {loading ? (
-                    <Spinner />
-                ) : (
+               
                     <Table variant='simple'>
                         <Thead>
                             <Tr>
@@ -120,7 +117,7 @@ const PackagesList = () => {
                             ))}
                         </Tbody>
                     </Table>
-                )}
+                
             </Box>
 
             <Box my='10px'>
