@@ -6,7 +6,7 @@ export const fetchCountFromAPI = createAsyncThunk(
   'counter/fetchCount',
   async () => {
       const response = await new Promise((resolve) =>
-          setTimeout(() => resolve(), 500)
+          setTimeout(() => resolve(), 1000)
       );
       return response  ; 
   }
