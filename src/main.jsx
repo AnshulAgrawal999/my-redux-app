@@ -58,7 +58,7 @@ const customTheme = extendTheme({
 
 
 ReactDOM.render(
-	<ChakraProvider>
+	<ChakraProvider theme={customTheme}>
 	  <Provider store={store}>
 		<App />
 	  </Provider>
