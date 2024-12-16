@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'  ;
+
 import {
     Box, Text, Spacer, HStack, Menu, MenuButton, MenuList, MenuItemOption, MenuOptionGroup, MenuDivider, Button,
     Input, InputGroup, InputLeftElement, Table, Tbody, Tr, Td, Thead, Th
-} from '@chakra-ui/react';
-import { AddIcon, DeleteIcon, SearchIcon } from '@chakra-ui/icons';
-import _ from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
-import { addPackage, deletePackage, setPackages } from '../redux/packagesListSlice'; // Import actions from your slice
+} from '@chakra-ui/react'  ;
+
+import { AddIcon, DeleteIcon, SearchIcon } from '@chakra-ui/icons'  ;
+
+import _ from 'lodash'  ;
+
+import { useDispatch, useSelector } from 'react-redux'  ;
+
+import { addPackage, deletePackage, setPackages } from '../redux/packagesListSlice'  ; // actions from respective slice
 
 const PackagesList = () => {
-    const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' });
-    const [searchQuery, setSearchQuery] = useState('');
-    const [sortedPackages, setSortedPackages] = useState([]);
+
+    const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' })  ;
+
+    const [searchQuery, setSearchQuery] = useState('')  ;
+
+    const [sortedPackages, setSortedPackages] = useState([])  ;
 
     const packages = useSelector(state => state.packages);
     const dispatch = useDispatch();
@@ -23,15 +31,14 @@ const PackagesList = () => {
                 // const response = await fetch( 'http://localhost:4000/packages' )  ;
                 // const data = await response.json();
 
-
+                // Example initial state
                 const data = [
-                    // Example initial state, replace or fetch dynamically
                     { id: 1, packageName: 'Jee Mains Crash Course', price: 18000, createdAt: '2024-12-01T10:00:00Z' },
                     { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 40000, createdAt: '2024-12-05T12:00:00Z' },
                     { id: 3, packageName: 'Java Spring Boot', price: 30000, createdAt: '2024-12-10T15:00:00Z' },
-                    { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-05T15:00:00Z' },
-                    { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-10T15:00:00Z' },
-                    { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-01T10:00:00Z' },
+                    { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-05T11:00:00Z' },
+                    { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-10T14:00:00Z' },
+                    { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-01T13:00:00Z' },
                   ] ;
 
 
@@ -133,7 +140,7 @@ const PackagesList = () => {
                             <Tr key={pkg.id}>
                                 <Td>{pkg.packageName}</Td>
                                 <Td>{pkg.price}</Td>
-                                <Td>{new Date(pkg.createdAt).toLocaleDateString()}</Td>
+                                <Td>{new Date(pkg.createdAt).toLocaleString() }</Td>
                                 <Td>
                                     <Button size='sm' colorScheme='red' onClick={() => handleDelete(pkg.id)}>
                                         <DeleteIcon />
