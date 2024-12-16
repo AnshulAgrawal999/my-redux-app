@@ -42,9 +42,9 @@ function App() {
 
             <Routes>
 
-                <Route path="/" element={<CounterPage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/packages" element={<PackagesList />} />
+                <Route path="/" element={<CounterPage />} exact />
+                <Route path="/about" element={<AboutPage />} exact />
+                <Route path="/packages" element={<PackagesList />} exact />
 
             </Routes>
 
