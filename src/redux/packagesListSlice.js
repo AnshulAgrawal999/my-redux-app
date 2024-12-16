@@ -22,8 +22,15 @@ const packagesSlice = createSlice({
         deletePackage(state, action) {
             return state.filter(pkg => pkg.id !== action.payload); // Filter out the deleted package
         },
+        updatePackage(state, action) {
+            const { id, field, value } = action.payload;
+            const packageToUpdate = state.find(pkg => pkg.id === id);
+            if (packageToUpdate) {
+                packageToUpdate[field] = value; // Update the package field with the new value
+            }
+        },
     },
 });
 
-export const { setPackages, addPackage, deletePackage } = packagesSlice.actions;
+export const { setPackages, addPackage, deletePackage, updatePackage } = packagesSlice.actions;
 export default packagesSlice.reducer;

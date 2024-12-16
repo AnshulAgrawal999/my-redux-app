@@ -1,33 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-    Box, Text, Spacer, HStack, Menu, MenuButton, MenuList, MenuItemOption, MenuOptionGroup, MenuDivider, Button,
-    Input, InputGroup, InputLeftElement, Table, Tbody, Tr, Td, Thead, Th
+    Box, Text, Spacer, HStack, Input, InputGroup, InputLeftElement, Table, Tbody, Tr, Td, Thead, Th, Button,
+    Editable, EditableInput, EditablePreview
 } from '@chakra-ui/react';
 
-import { AddIcon, DeleteIcon, SearchIcon, CloseIcon } from '@chakra-ui/icons';
-
-import _ from 'lodash';
+import { AddIcon, DeleteIcon, SearchIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPackage, deletePackage, setPackages } from '../redux/packagesListSlice';
+import { addPackage, deletePackage, updatePackage } from '../redux/packagesListSlice'; // Add updatePackage action
 
-const data = [
-    { id: 1, packageName: 'Jee Mains Crash Course', price: 18000, createdAt: '2024-12-16T10:00:00Z' },
-    { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 40000, createdAt: '2024-12-16T12:00:00Z' },
-    { id: 3, packageName: 'Java Spring Boot', price: 30000, createdAt: '2024-12-16T15:00:00Z' },
-    { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-16T11:00:00Z' },
-    { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-16T14:00:00Z' },
-    { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-16T13:00:00Z' },
-];
-
+import _ from 'lodash'  ;
 
 const PackagesList = () => {
     const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' });
     const [searchQuery, setSearchQuery] = useState('');
 
-    const packages = useSelector(state => state.packages); // Redux state for packages
+    const packages = useSelector(state => state.packages);
     const dispatch = useDispatch();
 
-    // Filter and sort packages based on the current configuration
     const getSortedAndFilteredPackages = () => {
         let filtered = packages;
         if (searchQuery) {
@@ -57,17 +46,21 @@ const PackagesList = () => {
     };
 
     const handleDelete = (packageId) => {
-        dispatch(deletePackage(packageId)); // Permanently remove from Redux state
+        dispatch(deletePackage(packageId));
     };
 
     const handleAddPackage = () => {
         const newPackage = {
             id: Date.now(),
             packageName: 'New Package',
-            price: 150,
+            price: 1000,
             createdAt: new Date().toISOString(),
         };
         dispatch(addPackage(newPackage));
+    };
+
+    const handleUpdatePackage = (id, field, value) => {
+        dispatch(updatePackage({ id, field, value }));
     };
 
     return (
@@ -96,13 +89,7 @@ const PackagesList = () => {
                 </Button>
             </HStack>
 
-            <Box my="2rem" px="1em" bg="#f9f9f9" p="10px" borderRadius="md">
-                <Text fontWeight="bold" fontSize="lg" mb="2">Applied Filters & Sort:</Text>
-                <Text color="gray.700">Search Query: <b>{searchQuery || 'None'}</b></Text>
-                <Text color="gray.700">Sort By: <b>{sortConfig.field}</b> ({sortConfig.order})</Text>
-            </Box>
-
-            <Table variant='simple'>
+            <Table variant='simple' mt="2rem">
                 <Thead>
                     <Tr>
                         <Th>Name</Th>
@@ -114,8 +101,24 @@ const PackagesList = () => {
                 <Tbody>
                     {sortedPackages.map(pkg => (
                         <Tr key={pkg.id}>
-                            <Td>{pkg.packageName}</Td>
-                            <Td>{pkg.price}</Td>
+                            <Td>
+                                <Editable
+                                    defaultValue={pkg.packageName}
+                                    onSubmit={(value) => handleUpdatePackage(pkg.id, 'packageName', value)}
+                                >
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
+                            </Td>
+                            <Td>
+                                <Editable
+                                    defaultValue={pkg.price.toString()}
+                                    onSubmit={(value) => handleUpdatePackage(pkg.id, 'price', parseFloat(value))}
+                                >
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
+                            </Td>
                             <Td>{new Date(pkg.createdAt).toLocaleString()}</Td>
                             <Td>
                                 <Button size='sm' colorScheme='red' onClick={() => handleDelete(pkg.id)}>
@@ -138,6 +141,4 @@ const PackagesList = () => {
     );
 };
 
-
 export default PackagesList;
-
