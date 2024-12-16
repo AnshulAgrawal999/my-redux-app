@@ -3,7 +3,7 @@ import { createSlice , createAsyncThunk } from '@reduxjs/toolkit'
 
 // Simulated API call
 export const fetchCountFromAPI = createAsyncThunk(
-  'counter/fetchCount',
+  'fetchCount',
   async () => {
       const response = await new Promise((resolve) =>
           setTimeout(() => resolve(), 1000)
