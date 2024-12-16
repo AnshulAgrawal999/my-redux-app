@@ -3,13 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { increment, decrement, incrementByAmount , reset , fetchCountFromAPI } from '../redux/counterSlice';
 
 function CounterPage() {
-    const count = useSelector((state) => state.counter.value);
+
+
+    const count = useSelector((state) => state.counter.value)  ;
 
     
-    const status = useSelector((state) => state.counter.status);
+    const status = useSelector((state) => state.counter.status)  ;
 
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()  ;
 
     return (
         <div>

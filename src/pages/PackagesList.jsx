@@ -23,7 +23,9 @@ const PackagesList = () => {
     const [sortedPackages, setSortedPackages] = useState([]);
 
 
-    const packages = useSelector(state => state.packages);
+    const packages = useSelector( state => state.packages )  ;
+
+    const dispatch = useDispatch()  ;
 
     // Filter and sort the packages when packages or searchQuery change
     useEffect(() => {
