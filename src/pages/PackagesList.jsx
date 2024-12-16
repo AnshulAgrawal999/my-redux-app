@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import {
     Box, Text, Spacer, HStack, Input, InputGroup, InputLeftElement, Table, Tbody, Tr, Td, Thead, Th, Button,
     Editable, EditableInput, EditablePreview
@@ -6,7 +6,7 @@ import {
 
 import { AddIcon, DeleteIcon, SearchIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPackage, deletePackage, updatePackage } from '../redux/packagesListSlice'; // Add updatePackage action
+import { addPackage, deletePackage, updatePackage , fetchPackagesFromAPI } from '../redux/packagesListSlice'; // Add updatePackage action
 
 import _ from 'lodash'  ;
 
@@ -14,7 +14,8 @@ const PackagesList = () => {
     const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' });
     const [searchQuery, setSearchQuery] = useState('');
 
-    const packages = useSelector(state => state.packages);
+    const { packages, status, error } = useSelector(state => state.packages)  ;
+
     const dispatch = useDispatch();
 
     const getSortedAndFilteredPackages = () => {
@@ -62,6 +63,21 @@ const PackagesList = () => {
     const handleUpdatePackage = (id, field, value) => {
         dispatch(updatePackage({ id, field, value }));
     };
+
+
+    useEffect(() => {
+        if (status === 'idle') {
+          dispatch(fetchPackagesFromAPI()); // Dispatch the fetch action on initial load
+        }
+      }, [dispatch, status]);
+    
+      if (status === 'loading') {
+        return <div>Loading...</div>;
+      }
+    
+      if (status === 'failed') {
+        return <div>Error: {error}</div>;
+      }
 
     return (
         <Box sx={{ backgroundColor: 'white', p: '10px', minH: '70vh', borderRadius: '10px' }}>
