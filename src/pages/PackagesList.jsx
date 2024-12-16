@@ -1,12 +1,12 @@
 import React from 'react'  ;
 
-function Packages() {
+function PackagesList() {
     return (
         <div>
-            <h1>Packages Page</h1>
+            <h1>Packages List Page</h1>
             <p></p>
         </div>
     );
 }
 
-export default Packages  ;
+export default PackagesList  ;

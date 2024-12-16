@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { login, logout } from './redux/userSlice';
 import CounterPage from './pages/CounterPage';
 import AboutPage from './pages/AboutPage';
-import Packages from './pages/Packages'
+import PackagesList from './pages/PackagesList'
 
 function App() {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -44,7 +44,7 @@ function App() {
 
                 <Route path="/" element={<CounterPage />} />
                 <Route path="/about" element={<AboutPage />} />
-                <Route path="/packages" element={<Packages />} />
+                <Route path="/packages" element={<PackagesList />} />
 
             </Routes>
 
