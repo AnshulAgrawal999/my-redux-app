@@ -21,20 +21,17 @@ const PackagesList = () => {
     useEffect(() => {
         const fetchAndProcessPackages = async () => {
             try {
-                // Example data for initial state
                 const data = [
-                    { id: 1, packageName: 'Jee Mains Crash Course', price: 18000, createdAt: '2024-12-01T10:00:00Z' },
-                    { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 40000, createdAt: '2024-12-05T12:00:00Z' },
-                    { id: 3, packageName: 'Java Spring Boot', price: 30000, createdAt: '2024-12-10T15:00:00Z' },
-                    { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-05T11:00:00Z' },
-                    { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-10T14:00:00Z' },
-                    { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-01T13:00:00Z' },
+                    { id: 1, packageName: 'Jee Mains Crash Course', price: 18000, createdAt: '2024-12-16T10:00:00Z' },
+                    { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 40000, createdAt: '2024-12-16T12:00:00Z' },
+                    { id: 3, packageName: 'Java Spring Boot', price: 30000, createdAt: '2024-12-16T15:00:00Z' },
+                    { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-16T11:00:00Z' },
+                    { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-16T14:00:00Z' },
+                    { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-16T13:00:00Z' },
                 ];
 
-                // Update Redux store
                 dispatch(setPackages(data));
 
-                // Apply filtering and sorting
                 let filtered = data;
                 if (searchQuery) {
                     filtered = filtered.filter(pkg =>
@@ -63,6 +60,12 @@ const PackagesList = () => {
         setSearchQuery(event.target.value);
     };
 
+    const resetFiltersAndSort = () => {
+        setSortConfig({ field: 'packageName', order: 'asc' });
+        setSearchQuery('');
+    };
+
+    
     const handleDelete = (packageId) => {
         dispatch(deletePackage(packageId));
     };
@@ -75,11 +78,6 @@ const PackagesList = () => {
             createdAt: new Date().toISOString(),
         };
         dispatch(addPackage(newPackage));
-    };
-
-    const resetFiltersAndSort = () => {
-        setSortConfig({ field: 'packageName', order: 'asc' });
-        setSearchQuery('');
     };
 
     return (
@@ -107,6 +105,12 @@ const PackagesList = () => {
                     Reset
                 </Button>
             </HStack>
+
+            <Box my="2rem" px="1em" bg="#f9f9f9" p="10px" borderRadius="md">
+                <Text fontWeight="bold" fontSize="lg" mb="2">Applied Filters & Sort:</Text>
+                <Text color="gray.700">Search Query: <b>{searchQuery || 'None'}</b></Text>
+                <Text color="gray.700">Sort By: <b>{sortConfig.field}</b> ({sortConfig.order})</Text>
+            </Box>
 
             <HStack px='1em' my='2rem' pos='sticky' top='90px' zIndex='9' bg='#ffffffa6'>
                 <Menu closeOnSelect={false}>
@@ -167,3 +171,4 @@ const PackagesList = () => {
 };
 
 export default PackagesList;
+
