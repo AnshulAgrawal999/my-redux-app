@@ -20,8 +20,17 @@ const PackagesList = () => {
         const fetchAndProcessPackages = async () => {
             try {
                 // Fetch packages from the API
-                const response = await fetch('/api/packages');
-                const data = await response.json();
+                // const response = await fetch( 'http://localhost:4000/packages' )  ;
+                // const data = await response.json();
+
+
+                const data = [
+                    // Example initial state, replace or fetch dynamically
+                    { id: 1, packageName: 'Basic Package', price: 50, createdAt: '2024-12-01T10:00:00Z' },
+                    { id: 2, packageName: 'Standard Package', price: 100, createdAt: '2024-12-05T12:00:00Z' },
+                    { id: 3, packageName: 'Premium Package', price: 200, createdAt: '2024-12-10T15:00:00Z' },
+                  ] ;
+
 
                 // Update Redux store with fetched packages
                 dispatch(setPackages(data));
