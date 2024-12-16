@@ -1,21 +1,23 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box, Text, Spacer, HStack, Input, InputGroup, InputLeftElement, Table, Tbody, Tr, Td, Thead, Th, Button,
-    Editable, EditableInput, EditablePreview
+    Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
+    FormControl, FormLabel, Input as ChakraInput
 } from '@chakra-ui/react';
 
 import { AddIcon, DeleteIcon, SearchIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPackage, deletePackage, updatePackage , fetchPackagesFromAPI } from '../redux/packagesListSlice'; // Add updatePackage action
+import { addPackage, deletePackage, updatePackage, fetchPackagesFromAPI } from '../redux/packagesListSlice';
 
-import _ from 'lodash'  ;
+import _ from 'lodash';
 
 const PackagesList = () => {
     const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' });
     const [searchQuery, setSearchQuery] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPackage, setSelectedPackage] = useState(null);
 
-    const { packages, status, error } = useSelector(state => state.packages)  ;
-
+    const { packages, status, error } = useSelector(state => state.packages);
     const dispatch = useDispatch();
 
     const getSortedAndFilteredPackages = () => {
@@ -60,24 +62,32 @@ const PackagesList = () => {
         dispatch(addPackage(newPackage));
     };
 
-    const handleUpdatePackage = (id, field, value) => {
-        dispatch(updatePackage({ id, field, value }));
+    const handleUpdatePackage = () => {
+        if (selectedPackage) {
+            dispatch(updatePackage(selectedPackage));
+            setIsModalOpen(false);
+            setSelectedPackage(null);
+        }
     };
 
+    const handleOpenModal = (pkg) => {
+        setSelectedPackage({ ...pkg });
+        setIsModalOpen(true);
+    };
 
     useEffect(() => {
         if (status === 'idle') {
-          dispatch(fetchPackagesFromAPI()); // Dispatch the fetch action on initial load
+            dispatch(fetchPackagesFromAPI()); // Dispatch the fetch action on initial load
         }
-      }, [dispatch, status]);
-    
-      if (status === 'loading') {
+    }, [dispatch, status]);
+
+    if (status === 'loading') {
         return <div>Loading...</div>;
-      }
-    
-      if (status === 'failed') {
+    }
+
+    if (status === 'failed') {
         return <div>Error: {error}</div>;
-      }
+    }
 
     return (
         <Box sx={{ backgroundColor: 'white', p: '10px', minH: '70vh', borderRadius: '10px' }}>
@@ -117,28 +127,25 @@ const PackagesList = () => {
                 <Tbody>
                     {sortedPackages.map(pkg => (
                         <Tr key={pkg.id}>
-                            <Td>
-                                <Editable
-                                    defaultValue={pkg.packageName}
-                                    onSubmit={(value) => handleUpdatePackage(pkg.id, 'packageName', value)}
-                                >
-                                    <EditablePreview />
-                                    <EditableInput />
-                                </Editable>
-                            </Td>
-                            <Td>
-                                <Editable
-                                    defaultValue={pkg.price.toString()}
-                                    onSubmit={(value) => handleUpdatePackage(pkg.id, 'price', parseFloat(value))}
-                                >
-                                    <EditablePreview />
-                                    <EditableInput />
-                                </Editable>
-                            </Td>
+                            <Td>{pkg.packageName}</Td>
+                            <Td>{pkg.price}</Td>
                             <Td>{new Date(pkg.createdAt).toLocaleString()}</Td>
                             <Td>
-                                <Button size='sm' colorScheme='red' onClick={() => handleDelete(pkg.id)}>
-                                    <DeleteIcon />
+                                <Button
+                                    size="sm"
+                                    colorScheme="blue"
+                                    onClick={() => handleOpenModal(pkg)}
+                                    leftIcon={<EditIcon />}
+                                >
+                                    Update
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    colorScheme="red"
+                                    onClick={() => handleDelete(pkg.id)}
+                                    leftIcon={<DeleteIcon />}
+                                >
+                                    Delete
                                 </Button>
                             </Td>
                         </Tr>
@@ -153,6 +160,38 @@ const PackagesList = () => {
                     </Button>
                 </HStack>
             </Box>
+
+            {/* Modal for updating package */}
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Edit Package</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <FormControl>
+                            <FormLabel>Package Name</FormLabel>
+                            <ChakraInput
+                                value={selectedPackage?.packageName || ''}
+                                onChange={(e) => setSelectedPackage({ ...selectedPackage, packageName: e.target.value })}
+                            />
+                        </FormControl>
+                        <FormControl mt="1rem">
+                            <FormLabel>Price</FormLabel>
+                            <ChakraInput
+                                value={selectedPackage?.price || ''}
+                                onChange={(e) => setSelectedPackage({ ...selectedPackage, price: parseFloat(e.target.value) })}
+                                type="number"
+                            />
+                        </FormControl>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" onClick={handleUpdatePackage}>
+                            Save
+                        </Button>
+                        <Button variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Box>
     );
 };
