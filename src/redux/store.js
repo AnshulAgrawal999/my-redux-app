@@ -4,6 +4,8 @@ import counterReducer from './counterSlice';
 
 import userReducer from './userSlice';
 
+import packagesReducer from './packagesListSlice'
+
 
 const loggerMiddleware = (storeAPI) => (next) => (action) => {
 
@@ -19,7 +21,8 @@ const loggerMiddleware = (storeAPI) => (next) => (action) => {
 const store = configureStore({
     reducer: {
         counter: counterReducer,
-        user : userReducer
+        user : userReducer,
+        packages : packagesReducer
     },
 
     middleware: (getDefaultMiddleware) =>

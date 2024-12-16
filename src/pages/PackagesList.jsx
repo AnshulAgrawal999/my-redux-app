@@ -1,25 +1,19 @@
-import React, { useState, useEffect } from 'react'  ;
-
+import React, { useState, useEffect } from 'react';
 import {
     Box, Text, Spacer, HStack, Menu, MenuButton, MenuList, MenuItemOption, MenuOptionGroup, MenuDivider, Button,
     Input, InputGroup, InputLeftElement, Table, Tbody, Tr, Td, Thead, Th
-} from '@chakra-ui/react'  ;
+} from '@chakra-ui/react';
 
-import { AddIcon, DeleteIcon, SearchIcon } from '@chakra-ui/icons'  ;
+import { AddIcon, DeleteIcon, SearchIcon, CloseIcon } from '@chakra-ui/icons';
 
-import _ from 'lodash'  ;
-
-import { useDispatch, useSelector } from 'react-redux'  ;
-
-import { addPackage, deletePackage, setPackages } from '../redux/packagesListSlice'  ; // actions from respective slice
+import _ from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPackage, deletePackage, setPackages } from '../redux/packagesListSlice';
 
 const PackagesList = () => {
-
-    const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' })  ;
-
-    const [searchQuery, setSearchQuery] = useState('')  ;
-
-    const [sortedPackages, setSortedPackages] = useState([])  ;
+    const [sortConfig, setSortConfig] = useState({ field: 'packageName', order: 'asc' });
+    const [searchQuery, setSearchQuery] = useState('');
+    const [sortedPackages, setSortedPackages] = useState([]);
 
     const packages = useSelector(state => state.packages);
     const dispatch = useDispatch();
@@ -27,11 +21,7 @@ const PackagesList = () => {
     useEffect(() => {
         const fetchAndProcessPackages = async () => {
             try {
-                // Fetch packages from the API
-                // const response = await fetch( 'http://localhost:4000/packages' )  ;
-                // const data = await response.json();
-
-                // Example initial state
+                // Example data for initial state
                 const data = [
                     { id: 1, packageName: 'Jee Mains Crash Course', price: 18000, createdAt: '2024-12-01T10:00:00Z' },
                     { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 40000, createdAt: '2024-12-05T12:00:00Z' },
@@ -39,13 +29,12 @@ const PackagesList = () => {
                     { id: 4, packageName: 'Python Django', price: 20000, createdAt: '2024-12-05T11:00:00Z' },
                     { id: 5, packageName: 'C++ ASP.NET', price: 30000, createdAt: '2024-12-10T14:00:00Z' },
                     { id: 6, packageName: 'Jee Mains+Advance Crash Course', price: 27000, createdAt: '2024-12-01T13:00:00Z' },
-                  ] ;
+                ];
 
-
-                // Update Redux store with fetched packages
+                // Update Redux store
                 dispatch(setPackages(data));
 
-                // Apply filtering and sorting on the fetched packages
+                // Apply filtering and sorting
                 let filtered = data;
                 if (searchQuery) {
                     filtered = filtered.filter(pkg =>
@@ -61,7 +50,7 @@ const PackagesList = () => {
         };
 
         fetchAndProcessPackages();
-    }, [dispatch, searchQuery, sortConfig]); // Dependencies include dispatch, searchQuery, and sortConfig
+    }, [dispatch, searchQuery, sortConfig]);
 
     const handleSortChange = (field) => {
         setSortConfig(prevConfig => ({
@@ -80,12 +69,17 @@ const PackagesList = () => {
 
     const handleAddPackage = () => {
         const newPackage = {
-            id: Date.now(), // Unique ID
+            id: Date.now(),
             packageName: 'New Package',
             price: 150,
             createdAt: new Date().toISOString(),
         };
         dispatch(addPackage(newPackage));
+    };
+
+    const resetFiltersAndSort = () => {
+        setSortConfig({ field: 'packageName', order: 'asc' });
+        setSearchQuery('');
     };
 
     return (
@@ -103,6 +97,15 @@ const PackagesList = () => {
                         onChange={handleSearchChange}
                     />
                 </InputGroup>
+                <Button
+                    leftIcon={<CloseIcon />}
+                    colorScheme="red"
+                    size="sm"
+                    variant="outline"
+                    onClick={resetFiltersAndSort}
+                >
+                    Reset
+                </Button>
             </HStack>
 
             <HStack px='1em' my='2rem' pos='sticky' top='90px' zIndex='9' bg='#ffffffa6'>
@@ -140,7 +143,7 @@ const PackagesList = () => {
                             <Tr key={pkg.id}>
                                 <Td>{pkg.packageName}</Td>
                                 <Td>{pkg.price}</Td>
-                                <Td>{new Date(pkg.createdAt).toLocaleString() }</Td>
+                                <Td>{new Date(pkg.createdAt).toLocaleString()}</Td>
                                 <Td>
                                     <Button size='sm' colorScheme='red' onClick={() => handleDelete(pkg.id)}>
                                         <DeleteIcon />
