@@ -11,7 +11,7 @@ const loggerMiddleware = (storeAPI) => (next) => (action) => {
 
   const result = next( action )  ;
 
-  console.log('Updated state:', store.getState() )  ;
+  console.log('Updated store state:', store.getState() )  ;
 
   return result;
 };
