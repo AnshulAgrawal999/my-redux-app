@@ -20,6 +20,7 @@ export const fetchPackagesFromAPI = createAsyncThunk(
   }
 );
 
+
 const packagesSlice = createSlice({
     name: 'packages',
     initialState: {
