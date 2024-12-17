@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice , createAsyncThunk } from '@reduxjs/toolkit'  ;
 
 // Simulated API call
 export const fetchPackagesFromAPI = createAsyncThunk(
