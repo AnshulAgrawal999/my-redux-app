@@ -10,15 +10,24 @@ import { addPackage, deletePackage, updatePackage, fetchPackagesFromAPI } from '
 import _ from 'lodash';
 
 const PackagesList = () => {
-    const [filterConfig, setFilterConfig] = useState({
-        sort: { field: 'packageName', order: 'asc' },
-        searchQuery: ''
+    // Load the filterConfig from sessionStorage or set default values
+    const [filterConfig, setFilterConfig] = useState(() => {
+        const savedConfig = sessionStorage.getItem('filterConfig');
+        return savedConfig
+            ? JSON.parse(savedConfig)
+            : { sort: { field: 'packageName', order: 'asc' }, searchQuery: '' };
     });
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState(null);
 
     const { packages, status, error } = useSelector(state => state.packages);
     const dispatch = useDispatch();
+
+    // Update sessionStorage whenever filterConfig changes
+    useEffect(() => {
+        sessionStorage.setItem('filterConfig', JSON.stringify(filterConfig));
+    }, [filterConfig]);
 
     const getSortedAndFilteredPackages = () => {
         let filtered = packages;
@@ -126,8 +135,12 @@ const PackagesList = () => {
             <Table variant='simple' mt="2rem">
                 <Thead>
                     <Tr>
-                        <Th>Name</Th>
-                        <Th>Price</Th>
+                        <Th cursor="pointer" onClick={() => handleSortChange('packageName')}>
+                            Name {filterConfig.sort.field === 'packageName' && (filterConfig.sort.order === 'asc' ? '↑' : '↓')}
+                        </Th>
+                        <Th cursor="pointer" onClick={() => handleSortChange('price')}>
+                            Price {filterConfig.sort.field === 'price' && (filterConfig.sort.order === 'asc' ? '↑' : '↓')}
+                        </Th>
                         <Th>Added Date</Th>
                         <Th>Actions</Th>
                     </Tr>
