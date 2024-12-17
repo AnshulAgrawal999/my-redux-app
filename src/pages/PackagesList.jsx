@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'  ;
 
 import {
     Box, Text, Spacer, HStack, Input, InputGroup, InputLeftElement, Table, Tbody, Tr, Td, Thead, Th, Button,
     Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
     FormControl, FormLabel, Input as ChakraInput
-} from '@chakra-ui/react';
+} from '@chakra-ui/react'  ;
 
-import { AddIcon, DeleteIcon, SearchIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon, SearchIcon, CloseIcon, EditIcon } from '@chakra-ui/icons'  ;
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'  ;
 
-import { addPackage, deletePackage, updatePackage, fetchPackagesFromAPI } from '../redux/packagesListSlice';
+import { addPackage, deletePackage, updatePackage, fetchPackagesFromAPI } from '../redux/packagesListSlice'  ;
 
-import _ from 'lodash';
+import _ from 'lodash'  ;
 
 const PackagesList = () => {
 
-    const [filterConfig, setFilterConfig] = useState(() => {
+    const [ filterConfig , setFilterConfig ] = useState( () => {
 
-        const savedConfig = sessionStorage.getItem('filterConfig');
+        const savedConfig = sessionStorage.getItem( 'filterConfig' )  ;
 
         return savedConfig
-            ? JSON.parse(savedConfig)
+            ? JSON.parse( savedConfig )
             : { sort: { field: 'packageName', order: 'asc' }, searchQuery: '' }  ;
         }
 
@@ -40,13 +40,13 @@ const PackagesList = () => {
     const dispatch = useDispatch()  ;
 
     useEffect(() => {
-        sessionStorage.setItem( 'filterConfig', JSON.stringify(filterConfig) )  ;
+        sessionStorage.setItem( 'filterConfig', JSON.stringify( filterConfig ) )  ;
     }, [ filterConfig ] )  ;
 
     const getSortedAndFilteredPackages = () => {
 
         let filtered = packages  ;
-        
+
         if (filterConfig.searchQuery) {
             filtered = filtered.filter(pkg =>
                 pkg.packageName.toLowerCase().includes(filterConfig.searchQuery.toLowerCase())
@@ -55,7 +55,7 @@ const PackagesList = () => {
         return _.orderBy(filtered, [filterConfig.sort.field], [filterConfig.sort.order]);
     };
 
-    const sortedPackages = getSortedAndFilteredPackages();
+    const sortedPackages = getSortedAndFilteredPackages()  ;
 
     const handleSortChange = (field) => {
         setFilterConfig(prevConfig => ({
@@ -118,7 +118,7 @@ const PackagesList = () => {
         if (status === 'idle') {
             dispatch(fetchPackagesFromAPI());
         }
-    }, [dispatch, status]);
+    }, [status]);
 
     if (status === 'loading') {
         return <div>Loading...</div>;
