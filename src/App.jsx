@@ -1,18 +1,30 @@
 import React from 'react';
+
 import { useSelector, useDispatch } from 'react-redux';
+
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
 import { login, logout } from './redux/userSlice';
+
 import CounterPage from './pages/CounterPage';
+
 import AboutPage from './pages/AboutPage';
-import PackagesList from './pages/PackagesList'
+
+import PackagesList from './pages/PackagesList'  ;
 
 function App() {
-    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    const userDetails = useSelector((state) => state.user.userDetails);
-    const dispatch = useDispatch();
+
+    const isAuthenticated = useSelector( ( state ) => state.user.isAuthenticated )  ;
+
+    const userDetails = useSelector( ( state ) => state.user.userDetails )  ;
+
+    const dispatch = useDispatch()  ;
 
     const handleLogin = () => {
-        dispatch(login({ name: 'John Doe', email: 'john.doe@example.com' }));
+
+        // console.log( login( { name: 'John Doe' , email: 'john.doe@example.com' }) )  ;
+
+        dispatch( login( { name: 'John Doe' , email: 'john.doe@example.com' } ) )  ;
     };
 
     const handleLogout = () => {
@@ -21,13 +33,15 @@ function App() {
 
     return (
         <Router>
+
             <nav>
 
-                {isAuthenticated ? (
-                    <button onClick={handleLogout}>Logout</button>
-                    ) : (
-                        <button onClick={handleLogin}>Login</button>
-                    )
+                {
+                    isAuthenticated ? (
+                        <button onClick={handleLogout}>Logout</button>
+                        ) : (
+                            <button onClick={handleLogin}>Login</button>
+                        )
                 }
 
                 <Link to="/">Home</Link> | 

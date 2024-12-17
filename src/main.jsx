@@ -1,16 +1,16 @@
 import ReactDOM from 'react-dom'  ;
 
-import App from './App.jsx'
+import App from './App.jsx'  ;
 
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux'  ;
 
-import store from './redux/store.js'
+import store from './redux/store.js'  ;
 
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"  ;
 
 // Let's say you want to add custom colors
 const customTheme = extendTheme({
-	
+
 	styles: {
 		global: {
 			"h1, .h1, h2, .h2,h3, .h3": {
@@ -59,10 +59,11 @@ const customTheme = extendTheme({
 ReactDOM.render(
 
 	<Provider store={store}>
-	<ChakraProvider theme={customTheme}>
-		<App />
-	</ChakraProvider>
+		<ChakraProvider theme={customTheme}>
+			<App />
+		</ChakraProvider>
 	</Provider>
 	,
 	document.getElementById('root')
+	
   );
