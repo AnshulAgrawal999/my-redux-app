@@ -160,7 +160,7 @@ const PackagesList = () => {
                             <Td>{pkg.price}</Td>
                             <Td>{new Date(pkg.createdAt).toLocaleString()}</Td>
                             <Td>
-                                <Button size="sm" colorScheme="blue" onClick={() => handleOpenModal(pkg)} leftIcon={<EditIcon />}>
+                                <Button size="sm" bg="blue.600" color="white" _hover={{ bg: "blue.900" }} variant="solid" onClick={() => handleOpenModal(pkg)} leftIcon={<EditIcon />}>
                                     Update
                                 </Button>
                                 <Button size="sm" colorScheme="red" onClick={() => handleDelete(pkg.id)} leftIcon={<DeleteIcon />}>
