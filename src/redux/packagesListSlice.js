@@ -25,23 +25,29 @@ const packagesSlice = createSlice({
     name: 'packages',
     initialState: {
         packages: [], // Store packages here
-        status: 'idle', // To track loading status
+        status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
         error: null, // To store error message
     },
     reducers: {
+
         setPackages(state, action) {
-            state.packages = action.payload;
+            state.packages = action.payload  ;
         },
+
         addPackage(state, action) {
-            state.packages.push(action.payload);
+            state.packages.push( action.payload )  ;
         },
+
         deletePackage(state, action) {
-            state.packages = state.packages.filter(pkg => pkg.id !== action.payload);
+            state.packages = state.packages.filter( pkg => pkg.id !== action.payload )  ;
         },
        
         updatePackage: (state, action) => {
-          const { id, packageName, price } = action.payload;
-          const index = state.packages.findIndex(pkg => pkg.id === id);
+
+          const { id, packageName, price } = action.payload  ;
+
+          const index = state.packages.findIndex( pkg => pkg.id === id )  ;
+          
           if (index !== -1) {
             // Mutate the package directly in the state
             state.packages[index] = {

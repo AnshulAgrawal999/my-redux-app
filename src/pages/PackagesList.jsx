@@ -15,31 +15,38 @@ import { addPackage, deletePackage, updatePackage, fetchPackagesFromAPI } from '
 import _ from 'lodash';
 
 const PackagesList = () => {
+
     const [filterConfig, setFilterConfig] = useState(() => {
+
         const savedConfig = sessionStorage.getItem('filterConfig');
+
         return savedConfig
             ? JSON.parse(savedConfig)
-            : { sort: { field: 'packageName', order: 'asc' }, searchQuery: '' };
-    });
+            : { sort: { field: 'packageName', order: 'asc' }, searchQuery: '' }  ;
+        }
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    )  ;
 
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false); // Add Package modal state
+    const [ isModalOpen , setIsModalOpen ] = useState( false )  ;
 
-    const [selectedPackage, setSelectedPackage] = useState(null);
+    const [ isAddModalOpen , setIsAddModalOpen ] = useState( false )  ; // Add Package modal state
 
-    const [newPackage, setNewPackage] = useState({ packageName: '', price: '' }); // New package state
+    const [ selectedPackage , setSelectedPackage ] = useState( null )  ;
 
-    const { packages, status, error } = useSelector(state => state.packages);
+    const [ newPackage , setNewPackage ] = useState( { packageName: '', price: '' } )  ; // New package state
+
+    const { packages , status , error } = useSelector( state => state.packages )  ;
     
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()  ;
 
     useEffect(() => {
-        sessionStorage.setItem('filterConfig', JSON.stringify(filterConfig));
-    }, [filterConfig]);
+        sessionStorage.setItem( 'filterConfig', JSON.stringify(filterConfig) )  ;
+    }, [ filterConfig ] )  ;
 
     const getSortedAndFilteredPackages = () => {
-        let filtered = packages;
+
+        let filtered = packages  ;
+        
         if (filterConfig.searchQuery) {
             filtered = filtered.filter(pkg =>
                 pkg.packageName.toLowerCase().includes(filterConfig.searchQuery.toLowerCase())
