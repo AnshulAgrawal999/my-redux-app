@@ -141,8 +141,13 @@ const PackagesList = () => {
                         <Th cursor="pointer" onClick={() => handleSortChange('price')}>
                             Price {filterConfig.sort.field === 'price' && (filterConfig.sort.order === 'asc' ? '↑' : '↓')}
                         </Th>
-                        <Th>Added Date</Th>
+                        
+                        <Th cursor="pointer" onClick={() => handleSortChange('createdAt')}>
+                            Added Date {filterConfig.sort.field === 'createdAt' && (filterConfig.sort.order === 'asc' ? '↑' : '↓')}
+                        </Th>
+
                         <Th>Actions</Th>
+                        
                     </Tr>
                 </Thead>
                 <Tbody>
