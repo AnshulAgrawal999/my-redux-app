@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
+
 import {
     Box, Text, Spacer, HStack, Input, InputGroup, InputLeftElement, Table, Tbody, Tr, Td, Thead, Th, Button,
     Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
     FormControl, FormLabel, Input as ChakraInput
 } from '@chakra-ui/react';
+
 import { AddIcon, DeleteIcon, SearchIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
+
 import { useDispatch, useSelector } from 'react-redux';
+
 import { addPackage, deletePackage, updatePackage, fetchPackagesFromAPI } from '../redux/packagesListSlice';
+
 import _ from 'lodash';
 
 const PackagesList = () => {
@@ -18,11 +23,15 @@ const PackagesList = () => {
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [isAddModalOpen, setIsAddModalOpen] = useState(false); // Add Package modal state
+
     const [selectedPackage, setSelectedPackage] = useState(null);
+
     const [newPackage, setNewPackage] = useState({ packageName: '', price: '' }); // New package state
 
     const { packages, status, error } = useSelector(state => state.packages);
+    
     const dispatch = useDispatch();
 
     useEffect(() => {
