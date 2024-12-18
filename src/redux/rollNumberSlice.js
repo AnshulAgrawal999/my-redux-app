@@ -35,13 +35,13 @@ export const rollNumberSlice = createSlice(
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchPackagesFromAPI.pending, (state) => {
+            .addCase(fetchStudentsFromAPI.pending, (state) => {
                 state.status = 'loading'; // Set loading state while fetching
             })
-            .addCase(fetchPackagesFromAPI.fulfilled, (state, action) => {
+            .addCase(fetchStudentsFromAPI.fulfilled, (state, action) => {
                 state.status = 'succeeded'; // Set to succeeded when data is fetched
             })
-            .addCase(fetchPackagesFromAPI.rejected, (state, action) => {
+            .addCase(fetchStudentsFromAPI.rejected, (state, action) => {
                 state.status = 'failed'; // Set to failed when there's an error
                 state.error = action.error.message; // Set the error message
             });
