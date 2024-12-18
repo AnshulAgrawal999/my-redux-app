@@ -29,15 +29,17 @@ const PackagesList = () => {
 
     const [ isModalOpen , setIsModalOpen ] = useState( false )  ;
 
-    const [ isAddModalOpen , setIsAddModalOpen ] = useState( false )  ; // Add Package modal state
+    const [ isAddModalOpen , setIsAddModalOpen ] = useState( false )  ;  // Add Package modal state
 
-    const [ selectedPackage , setSelectedPackage ] = useState( null )  ;
+    const [ selectedPackage , setSelectedPackage ] = useState( null )  ; // for update package
 
-    const [ newPackage , setNewPackage ] = useState( { packageName: '', price: '' } )  ; // New package state
+    const [ newPackage , setNewPackage ] = useState( { packageName: '', price: '' } )  ;  // New package state
 
     const { packages , status , error } = useSelector( state => state.packages )  ;
+
     
     const dispatch = useDispatch()  ;
+    
 
     useEffect(() => {
         sessionStorage.setItem( 'filterConfig', JSON.stringify( filterConfig ) )  ;

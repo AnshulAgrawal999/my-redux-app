@@ -12,6 +12,8 @@ import AboutPage from './pages/AboutPage';
 
 import PackagesList from './pages/PackagesList'  ;
 
+import RollNumGen from './pages/RollNumGen'  ;
+
 function App() {
 
     const isAuthenticated = useSelector( ( state ) => state.user.isAuthenticated )  ;
@@ -59,6 +61,8 @@ function App() {
                 <Route path="/" element={<CounterPage />} exact />
                 <Route path="/about" element={<AboutPage />} exact />
                 <Route path="/packages" element={<PackagesList />} exact />
+
+                <Route path="/rollnogen" element={<RollNumGen />} exact />
 
             </Routes>
 

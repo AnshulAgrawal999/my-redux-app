@@ -6,7 +6,7 @@ export const fetchPackagesFromAPI = createAsyncThunk(
   async () => {
       return new Promise((resolve) => {
           setTimeout(() => {
-              // Replace with actual API response
+              // Replace with sample API response
               resolve([
                   { id: 1, packageName: 'Jee Mains Course', price: 25000, createdAt: '2024-12-16T10:00:00Z' },
                   { id: 2, packageName: 'Full Stack Web Development(MERN)', price: 30000, createdAt: '2024-12-16T12:00:00Z' },
