@@ -8,7 +8,7 @@ export const fetchStudentsFromAPI = createAsyncThunk(
           setTimeout(() => {
               // Replace with sample API response
               resolve([
-                  { id: 1, createdAt: '2024-12-16T10:00:00Z' },
+                  { id: 1, createdAt: '2024-12-18T10:00:00Z' },
               ]);
           }, 500);
       });
