@@ -2,7 +2,7 @@ import { createSlice , createAsyncThunk } from '@reduxjs/toolkit'  ;
 
 // Simulated API call
 export const fetchStudentsFromAPI = createAsyncThunk(
-  'fetchPackages',
+  'fetchStudents',
   async () => {
       return new Promise((resolve) => {
           setTimeout(() => {
@@ -17,7 +17,8 @@ export const fetchStudentsFromAPI = createAsyncThunk(
 
 
 // Redux slice for managing roll numbers
-const rollNumberSlice = createSlice({
+export const rollNumberSlice = createSlice(
+{
     name: "rollNumbers",
     initialState: {
       rollNumbers: [],
@@ -31,10 +32,9 @@ const rollNumberSlice = createSlice({
       },
     },
   });
+
   
-  const { addRollNumber, resetRollNumbers } = rollNumberSlice.actions;
-  const store = configureStore({
-    reducer: {
-      rollNumbers: rollNumberSlice.reducer,
-    },
-  });
+export const { addRollNumber, resetRollNumbers } = rollNumberSlice.actions;
+
+
+export default rollNumberSlice.reducer;
