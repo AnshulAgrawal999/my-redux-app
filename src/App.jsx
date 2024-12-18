@@ -49,6 +49,8 @@ function App() {
                 <Link to="/">Home</Link> | 
                 <Link to="/about">About</Link>
                 <Link to="/packages"> Packages </Link>
+
+                <Link to='/rollnogen'> RollNoGen </Link>
                 
             </nav>
 
@@ -67,7 +69,7 @@ function App() {
             </Routes>
 
         </Router>
-    );
+    )  ;
 }
 
 export default App  ;

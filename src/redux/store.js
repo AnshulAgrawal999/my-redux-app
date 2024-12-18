@@ -6,7 +6,7 @@ import userReducer from './userSlice';
 
 import packagesReducer from './packagesListSlice'
 
-import rollNumGenReducer from './rollNumberSlice'  ;
+import rollNumberReducer from './rollNumberSlice'  ;
 
 const loggerMiddleware = (storeAPI) => (next) => (action) => {
 
@@ -24,11 +24,11 @@ const store = configureStore({
         counter: counterReducer,
         user : userReducer,
         packages : packagesReducer ,
-        rollno : rollNumGenReducer
+        rollNumbers: rollNumberReducer
     },
 
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(loggerMiddleware),
 });
 
-export default store;
+export default store  ;
