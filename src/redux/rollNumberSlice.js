@@ -22,6 +22,8 @@ export const rollNumberSlice = createSlice(
     name: "rollNumbers",
     initialState: {
       rollNumbers: [],
+      status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+      error: null, // To store error message
     },
     reducers: {
       addRollNumber: (state, action) => {
@@ -31,10 +33,23 @@ export const rollNumberSlice = createSlice(
         state.rollNumbers = [];
       },
     },
-  });
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchPackagesFromAPI.pending, (state) => {
+                state.status = 'loading'; // Set loading state while fetching
+            })
+            .addCase(fetchPackagesFromAPI.fulfilled, (state, action) => {
+                state.status = 'succeeded'; // Set to succeeded when data is fetched
+            })
+            .addCase(fetchPackagesFromAPI.rejected, (state, action) => {
+                state.status = 'failed'; // Set to failed when there's an error
+                state.error = action.error.message; // Set the error message
+            });
+    },
+});
 
   
-export const { addRollNumber, resetRollNumbers } = rollNumberSlice.actions;
+export const { addRollNumber, resetRollNumbers } = rollNumberSlice.actions  ;
 
 
 export default rollNumberSlice.reducer;
