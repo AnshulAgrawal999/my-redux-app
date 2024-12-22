@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+import React , { useState , useEffect } from 'react';
 import { 
   Box, 
   Button, 
@@ -10,13 +10,11 @@ import {
   Radio, 
   RadioGroup, 
   Select, 
-  IconButton, 
-  Tooltip, 
   useToast, 
   Heading, 
   HStack, 
   Grid,
-  Button as ChakraButton,
+  Flex,
 } from "@chakra-ui/react";
 
 import { 
@@ -36,14 +34,13 @@ import intersectionWith from 'lodash/intersectionWith';
 
 
 
-const CopyAbleText = ( { text } ) => {
+const CopyAbleText = ({ text }) => {
   const toast = useToast();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(text);
     toast({
       title: "Copied!",
-      description: `Copied "${text}" to clipboard.`,
       status: "success",
       duration: 2000,
       isClosable: true,
@@ -51,23 +48,27 @@ const CopyAbleText = ( { text } ) => {
   };
 
   return (
-
-    <Box>
-       <Text as="code" bg="gray.100" p={1} borderRadius="md">
-        {text}
-
-      </Text>
-
-      <Tooltip label="Copy to clipboard" aria-label="Copy tooltip">
-      <IconButton
-        size="sm"
-        icon={<CopyIcon />}
-        onClick={handleCopy}
-        aria-label="Copy button"
-      />
-      </Tooltip>
+    <Box
+      as="button"
+      onClick={handleCopy}
+      display="inline-flex"
+      alignItems="center"
+      bg="blue.50"
+      px={1}
+      py={1}
+      borderRadius="md"
+      fontSize="sm"
+      fontWeight="medium"
+      color="blue.700"
+      border="1px solid"
+      borderColor="blue.200"
+      _hover={{ bg: "blue.100" }}
+      _active={{ bg: "blue.200" }}
+      transition="background-color 0.2s"
+    >
+      <CopyIcon mr={2} />
+      {text}
     </Box>
-     
   );
 };
 
@@ -103,6 +104,7 @@ const ClassWiseTableRow = ({ standard, data, onUpdate }) => {
           placeholder="Enter Starting Index"
           value={data.startingIndex}
           onChange={(e) => onUpdate("startingIndex", Number(e.target.value))}
+          maxW={"90%"}
         />
       </td>
       <td>
@@ -111,6 +113,7 @@ const ClassWiseTableRow = ({ standard, data, onUpdate }) => {
           placeholder="Enter Number of Digits"
           value={data.numberOfDigits}
           onChange={(e) => onUpdate("numberOfDigits", Number(e.target.value))}
+          maxW={"90%"}
         />
       </td>
 
@@ -122,10 +125,9 @@ const ClassWiseTableRow = ({ standard, data, onUpdate }) => {
 
 
 
-const ClassWise = ( { selectedSections } ) => {
-
+const ClassWise = ({ selectedSections }) => {
   const result = {};
-  
+
   // Populate the `result` object with section data mapped by name
   selectedSections.forEach((section) => {
     const id = section?.standard?.data?.id;
@@ -134,7 +136,7 @@ const ClassWise = ( { selectedSections } ) => {
       result[name] = id; // Create key-value pairs: name -> id
     }
   });
-  
+
   // Convert the `result` object to an array of class data
   const classData = Object.keys(result).map((name) => ({
     name,
@@ -147,17 +149,22 @@ const ClassWise = ( { selectedSections } ) => {
     { id: 3, key: "{#section#}", ex: "B" },
   ];
 
-  const [allStandards] = useState(classData);
-
-  const [rowData, setRowData] = useState(
-    classData.map((el) => ({
-      startingIndex: 1,
-      numberOfDigits: "",
-      id: el.id,
-    }))
-  );
+  const [allStandards, setAllStandards] = useState(classData);
+  const [rowData, setRowData] = useState([]);
 
   const [rollNumberFormat, setRollNumberFormat] = useState(""); // State for the common rollNumberFormat
+
+  // Update `allStandards` and `rowData` when `selectedSections` changes
+  useEffect(() => {
+    setAllStandards(classData);
+    setRowData(
+      classData.map((el) => ({
+        startingIndex: 1,
+        numberOfDigits: "",
+        standardId: el.id,
+      }))
+    );
+  }, [selectedSections]);
 
   const updateRowData = (index, key, value) => {
     setRowData((prev) =>
@@ -168,18 +175,22 @@ const ClassWise = ( { selectedSections } ) => {
   };
 
   const handleSaveAll = () => {
-    console.log( { formula : rollNumberFormat , data : rowData , all : false } )  ;
+    console.log({
+      formula: rollNumberFormat,
+      data: rowData,
+      applyOnAll: false,
+    });
   };
 
   return (
     <Box
-      maxWidth="800px"
       margin="20px auto"
       padding="20px"
       border="1px solid #CBD5E0"
       borderRadius="md"
       boxShadow="md"
       bg="white"
+      maxW={"70%"}
     >
       <FormControl>
         <FormLabel>Roll Number Format</FormLabel>
@@ -187,6 +198,7 @@ const ClassWise = ( { selectedSections } ) => {
           placeholder="Enter Roll Number Format"
           value={rollNumberFormat}
           onChange={(e) => setRollNumberFormat(e.target.value)}
+          maxW={"35%"}
         />
       </FormControl>
 
@@ -201,10 +213,10 @@ const ClassWise = ( { selectedSections } ) => {
         <table style={{ width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ textAlign: "center" }}>Class</th>
-              <th style={{ textAlign: "center" }}>Starting Index</th>
-              <th style={{ textAlign: "center" }}>Number of Digits</th>
-              <th style={{ textAlign: "center" }}>Sample Roll No</th>
+              <th>Class</th>
+              <th>Starting Index</th>
+              <th>Number of Digits</th>
+              <th>Sample Roll No</th>
             </tr>
           </thead>
 
@@ -216,7 +228,7 @@ const ClassWise = ( { selectedSections } ) => {
                 data={{
                   ...rowData[index],
                   rollNumberFormat:
-                    rowData[index].rollNumberFormat || rollNumberFormat,
+                    rowData[index]?.rollNumberFormat || rollNumberFormat,
                 }} // Pass the common rollNumberFormat if row-specific one is not set
                 onUpdate={(key, value) => updateRowData(index, key, value)}
               />
@@ -225,9 +237,9 @@ const ClassWise = ( { selectedSections } ) => {
         </table>
 
         <HStack mt={4} justify="flex-end">
-          <ChakraButton size="sm" colorScheme="green" onClick={handleSaveAll}>
+          <Button size="sm" colorScheme="green" onClick={handleSaveAll}>
             Save All
-          </ChakraButton>
+          </Button>
         </HStack>
       </Grid>
     </Box>
@@ -237,18 +249,20 @@ const ClassWise = ( { selectedSections } ) => {
 
 
 
+
 const SectionWiseTableRow = ({ standard, data, onUpdate }) => {
  
   return (
     <tr>
+      <td> {standard.standard.data.name}</td>
       <td> {standard.name}</td>
-      <td> {standard.section}</td>
       <td>
         <Input
           type="number"
           placeholder="Enter Starting Index"
           value={data.startingIndex}
           onChange={(e) => onUpdate("startingIndex", Number(e.target.value))}
+          maxW={"90%"}
         />
       </td>
       <td>
@@ -257,6 +271,7 @@ const SectionWiseTableRow = ({ standard, data, onUpdate }) => {
           placeholder="Enter Number of Digits"
           value={data.numberOfDigits}
           onChange={(e) => onUpdate("numberOfDigits", Number(e.target.value))}
+          maxW={"90%"}
         />
       </td>
 
@@ -267,10 +282,7 @@ const SectionWiseTableRow = ({ standard, data, onUpdate }) => {
 };
 
 
-
-const SectionWise = ( { selectedSections } ) => {
-
-
+const SectionWise = ({ selectedSections }) => {
   const copyableTexts = [
     { id: 1, key: "{#session#}", ex: "2023-24" },
     { id: 2, key: "{#class#}", ex: "12" },
@@ -279,16 +291,18 @@ const SectionWise = ( { selectedSections } ) => {
 
   const [rollNumberFormat, setRollNumberFormat] = useState(""); // State for the common rollNumberFormat
 
+  const [rowData, setRowData] = useState([]);
 
-  const [rowData, setRowData] = useState(
-    selectedSections.map((el) => ({
-      startingIndex: 1,
-      numberOfDigits: '',
-      id: el.id,
-    }))
-  );
-
-  
+  // Sync rowData with selectedSections when selectedSections changes
+  useEffect(() => {
+    setRowData(
+      selectedSections.map((el) => ({
+        startingIndex: 1,
+        numberOfDigits: '',
+        sectionId: el.id,
+      }))
+    );
+  }, [selectedSections]);
 
   const updateRowData = (index, key, value) => {
     setRowData((prev) =>
@@ -299,19 +313,18 @@ const SectionWise = ( { selectedSections } ) => {
   };
 
   const handleSaveAll = () => {
-
-    console.log( { formula : rollNumberFormat , data : rowData , all : false} )  ;
+    console.log({ formula: rollNumberFormat, data: rowData, applyOnAll: false });
   };
 
   return (
     <Box
-      maxWidth="800px"
       margin="20px auto"
       padding="20px"
       border="1px solid #CBD5E0"
       borderRadius="md"
       boxShadow="md"
       bg="white"
+      maxW={"75%"}
     >
       <FormControl>
         <FormLabel>Roll Number Format</FormLabel>
@@ -319,6 +332,7 @@ const SectionWise = ( { selectedSections } ) => {
           placeholder="Enter Roll Number Format"
           value={rollNumberFormat}
           onChange={(e) => setRollNumberFormat(e.target.value)}
+          maxW={"35%"}
         />
       </FormControl>
 
@@ -333,24 +347,24 @@ const SectionWise = ( { selectedSections } ) => {
         <table style={{ width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ textAlign: "center" }}>Class</th>
-              <th style={{ textAlign: "center" }}> Section </th>
-              <th style={{ textAlign: "center" }}>Starting Index</th>
-              <th style={{ textAlign: "center" }}>Number of Digits</th>
-              <th style={{ textAlign: "center" }}>Sample Roll No</th>
+              <th >Class</th>
+              <th > Section </th>
+              <th >Starting Index</th>
+              <th >Number of Digits</th>
+              <th >Sample Roll No</th>
             </tr>
           </thead>
 
           <tbody>
-            { selectedSections.map((standard, index) => (
+            {selectedSections.map((standard, index) => (
               <SectionWiseTableRow
                 key={standard.id}
                 standard={standard}
                 data={{
-                  ...rowData[index],
-                  rollNumberFormat:
-                    rowData[index].rollNumberFormat || rollNumberFormat,
-                }} // Pass the common rollNumberFormat if row-specific one is not set
+                  startingIndex: rowData[index]?.startingIndex || 1 ,
+                  numberOfDigits: rowData[index]?.numberOfDigits || '',
+                  rollNumberFormat: rowData[index]?.rollNumberFormat || rollNumberFormat,
+                }}
                 onUpdate={(key, value) => updateRowData(index, key, value)}
               />
             ))}
@@ -358,14 +372,15 @@ const SectionWise = ( { selectedSections } ) => {
         </table>
 
         <HStack mt={4} justify="flex-end">
-          <ChakraButton size="sm" colorScheme="green" onClick={handleSaveAll}>
+          <Button size="sm" colorScheme="green" onClick={handleSaveAll}>
             Save All
-          </ChakraButton>
+          </Button>
         </HStack>
       </Grid>
     </Box>
   );
 };
+
 
 
 const OverallWise = (  ) => {
@@ -399,18 +414,18 @@ const OverallWise = (  ) => {
   
   const handleSave = () => {
 
-    console.log( { formula : rollNumberFormat , startingIndex , numberOfDigits , data : [] , all : true } )  ;
+    console.log( { formula : rollNumberFormat , startingIndex , numberOfDigits , data : [] , applyOnAll : true } )  ;
   };
 
   return ( 
     <Box
-      maxWidth="800px"
       margin="20px auto"
       padding="20px"
       border="1px solid #CBD5E0"
       borderRadius="md"
       boxShadow="md"
       bg="white"
+      maxW={"50%"}
     >
       <FormControl>
         <FormLabel>Roll Number Format</FormLabel>
@@ -418,6 +433,7 @@ const OverallWise = (  ) => {
           placeholder="Enter Roll Number Format"
           value={rollNumberFormat}
           onChange={(e) => setRollNumberFormat(e.target.value)}
+          maxW="35%"
         />
       </FormControl>
 
@@ -437,6 +453,7 @@ const OverallWise = (  ) => {
           placeholder="Enter Starting Index"
           value={startingIndex}
           onChange={(e) => setStartingIndex(Number(e.target.value))}
+          maxW={"35%"}
         />
       </FormControl>
 
@@ -447,14 +464,16 @@ const OverallWise = (  ) => {
           placeholder="Enter Number of Digits (e.g.- 3)"
           value={numberOfDigits}
           onChange={(e) => setNumberOfDigits(Number(e.target.value))}
+          maxW={"35%"}
+
         />
       </FormControl>
 
       <Text mt={4}>Sample Roll No: {sampleFormatRollNumber()}</Text>
 
-      <ChakraButton size="sm" colorScheme="green" onClick={handleSave}>
-            Save
-      </ChakraButton> 
+      <Box display="flex" justifyContent="flex-end">
+        <Button size="sm" colorScheme="green" onClick={handleSave} >Save All</Button>
+      </Box>
 
     </Box>
   );
@@ -483,8 +502,6 @@ function RollNumberGenerator() {
   const [isSectionWiseVisible, setSectionWiseIsVisible] = useState( false )  ;
 
   const [isClassWiseVisible, setClassWiseIsVisible] = useState( false )  ;
-
-  const [ formulaData , setFormulaData ] = useState( {  formula: '' , data: [] , all : false } )  ;
 
   const allOptions = [
     { key: "studentName", label: "Student Name" },
@@ -547,7 +564,7 @@ function RollNumberGenerator() {
 
       setSelectedSections(selectedSections);
 
-      console.log( { 'applyOnSectionIds' : selectedSections , formulaData } )  ;
+      console.log( { 'applyOnSectionIds' : selectedSections } )  ;
   }
 
 
@@ -594,17 +611,17 @@ function RollNumberGenerator() {
   };
 
 return (
-  <Box p={5} maxW="800px" mx="auto">
+  <Box p={5} mx="auto">
 
-    <Heading size="lg" color="white" bg="green.500" mb={5} p={3}>
+    <Heading size="md" color="white" fontWeight={"light"} bg="green.400" mb={5} p={3}>
       Roll Number Format
     </Heading>
 
     <VStack spacing={6}>
 
-    <Box borderWidth="1px" borderRadius="md" p={4} bg="gray.50">
+    <Box borderWidth="1px" width={"100%"} borderRadius="md" p={4} bg="gray.50">
 
-      <Select placeholder="Select an option" onChange={handleClassesChange}>
+      <Select placeholder="Select an option" onChange={handleClassesChange} maxW={"250px"}>
 
         <option value="class"> Classwise </option>
         <option value="section"> Sectionwise </option>
@@ -613,8 +630,8 @@ return (
       </Select>
 
       { 
-        !isOverAllVisible && ( isClassWiseVisible || isSectionWiseVisible ) ? <Button size="sm" colorScheme="green" leftIcon={<AddIcon />} onClick={handleAddBatchBtnClick}>
-          Add Section To Apply On
+        !isOverAllVisible && ( isClassWiseVisible || isSectionWiseVisible ) ? <Button mt={"4"} size="sm" colorScheme="blue" leftIcon={<AddIcon />} onClick={handleAddBatchBtnClick}>
+          Add Section
         </Button> : null
       }
 
@@ -642,11 +659,13 @@ return (
     </VStack>
 
 
-    <Heading size="lg" color="white" bg="green.500" mt={8} mb={4} p={3}>
+    <Heading size="md" fontWeight="light" color="white" bg="green.400" mt={8} mb={4} p={3}>
       Sort Students
     </Heading>
 
     <VStack spacing={6}>
+
+      <Flex wrap="wrap" gap={12} p={5} >
 
       {boxes.map(({ id, key }) => {
         const selectedOption = allOptions.find((opt) => opt.key === key);
@@ -687,19 +706,27 @@ return (
         );
       })}
 
-      <Button
-        colorScheme="blue"
-        onClick={addBox}
-        isDisabled={boxes.length >= allOptions.length}
-        variant="outline"
-      >
-        Add Field
-      </Button>
+        <Box p={5}>
+            <Button
+              colorScheme="blue"
+              onClick={addBox}
+              isDisabled={boxes.length >= allOptions.length}
+              size="sm"
+            >
+              +
+            </Button>
+      </Box>
+    </Flex>
 
-      <Button variant="outline" colorScheme="yellow" onClick={resetHandler} >
+      <Button colorScheme="red" onClick={resetHandler} size="sm" >
         Reset
       </Button>
+      
     </VStack>
+
+    <Box display="flex" justifyContent="flex-end">
+      <Button colorScheme="green">Save All</Button>
+    </Box>
 
   </Box>
 );
